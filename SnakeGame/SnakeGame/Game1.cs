@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -34,8 +35,11 @@ namespace SnakeGame
         private float timer = 2f;
         private List<Vector2> listOPositions = new List<Vector2>();
         private SpriteFont spriteFont;
+        private SpriteFont recordSprite;
         private Vector2 fontPos;
+        private Vector2 recordPos;
         private int score = 0;
+        private int record = 0;
         private bool dead = false;
         private Vector2 dir;
         private Color[] backgroundColors = new Color[] {Color.Aqua, Color.Aquamarine, Color.Black, Color.BlueViolet,
@@ -66,6 +70,14 @@ namespace SnakeGame
             graphics.PreferredBackBufferHeight = 600;
             graphics.IsFullScreen = false;
             score = 0;
+            try
+            {
+                ReadRecord();
+            }
+            catch
+            {
+                record = 0;
+            }
             dead = false;
             graphics.ApplyChanges();
             direction.X = 30f;
@@ -93,8 +105,10 @@ namespace SnakeGame
 
             // TODO: use this.Content to load your game content here
             spriteFont = Content.Load<SpriteFont>("HUD");
+            recordSprite = Content.Load<SpriteFont>("HUD");
 
             fontPos = new Vector2(12f, 12f);
+            recordPos = new Vector2(500f, 12f);
         }
 
         /// <summary>
@@ -169,6 +183,10 @@ namespace SnakeGame
                 if (snake.Body[0].Intersects(snake.Body[i])) //if it intersects with its tail
                 {
                     dead = true;
+                    if (record == score)
+                    {
+                        WriteRecord();
+                    }
                 }
             }
 
@@ -359,6 +377,10 @@ namespace SnakeGame
             snake.Body.Add(new Rectangle(snake.Body[snake.Body.Count - 1].X, snake.Body[snake.Body.Count - 1].Y, 15, 15));
             listOPositions.Add(new Vector2(snake.Body[snake.Body.Count - 1].X, snake.Body[snake.Body.Count - 1].Y));
             score += 10;
+            if (score > record)
+            {
+                record = score;
+            }
         }
 
         private void ChangeBackgroundColor()
@@ -369,6 +391,20 @@ namespace SnakeGame
                 backgroundColor = backgroundColors[colorInt];
                 once = false;
             }
+        }
+
+        private void ReadRecord()
+        {
+            StreamReader streamReader = new StreamReader("record.txt");
+            record = Int32.Parse(streamReader.ReadLine());
+            streamReader.Close();
+        }
+
+        private void WriteRecord()
+        {
+            StreamWriter streamWriter = new StreamWriter("record.txt");
+            streamWriter.Write(record);
+            streamWriter.Close();
         }
 
         /// <summary>
@@ -394,18 +430,24 @@ namespace SnakeGame
                     }
                 }
             string output = "Score: " + score.ToString();
-            Vector2 FontOrigin = new Vector2(0, 0);
+            Vector2 fontOrigin = new Vector2(0, 0);
+            string recordOutput = "Record: " + record.ToString();
+            Vector2 recordOrigin = new Vector2(0, 0);
 
             if (backgroundColor == Color.Gold || backgroundColor == Color.SpringGreen || backgroundColor == Color.Plum
                 || backgroundColor == Color.Aqua || backgroundColor == Color.Aquamarine)
             {
                 spriteBatch.DrawString(spriteFont, output, fontPos, Color.Black,
-                0, FontOrigin, 1.0f, SpriteEffects.None, 0.5f);
+                0, fontOrigin, 1.0f, SpriteEffects.None, 0.5f);
+                spriteBatch.DrawString(recordSprite, recordOutput, recordPos, Color.Black,
+                0, recordOrigin, 1.0f, SpriteEffects.None, 0.5f);
             }
             else
             {
                 spriteBatch.DrawString(spriteFont, output, fontPos, Color.LightGreen,
-                0, FontOrigin, 1.0f, SpriteEffects.None, 0.5f);
+                0, fontOrigin, 1.0f, SpriteEffects.None, 0.5f);
+                spriteBatch.DrawString(recordSprite, recordOutput, recordPos, Color.LightGreen,
+                0, recordOrigin, 1.0f, SpriteEffects.None, 0.5f);
             }
 
             if (rect1.X > 0)
