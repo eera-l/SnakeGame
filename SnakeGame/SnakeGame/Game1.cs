@@ -108,7 +108,7 @@ namespace SnakeGame
             recordSprite = Content.Load<SpriteFont>("HUD");
 
             fontPos = new Vector2(12f, 12f);
-            recordPos = new Vector2(500f, 12f);
+            recordPos = new Vector2(470f, 12f);
         }
 
         /// <summary>
