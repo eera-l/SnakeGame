@@ -51,6 +51,9 @@ namespace SnakeGame
         private Color backgroundColor;
         private bool once = true;
         private bool paused = false; 
+        //Sound instances
+        private SoundEffect ouroboros;
+        private SoundEffectInstance ouInstance;
 
         public Game1()
         {
@@ -106,6 +109,10 @@ namespace SnakeGame
             // TODO: use this.Content to load your game content here
             spriteFont = Content.Load<SpriteFont>("HUD");
             recordSprite = Content.Load<SpriteFont>("HUD");
+            ouroboros = Content.Load<SoundEffect>("Ouroboros Touch");
+            ouInstance = ouroboros.CreateInstance();
+            ouInstance.IsLooped = true;
+            ouInstance.Play();
 
             fontPos = new Vector2(12f, 12f);
             recordPos = new Vector2(470f, 12f);
