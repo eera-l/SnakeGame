@@ -44,7 +44,7 @@ namespace SnakeGame
         private Vector2 dir;
         private Color[] backgroundColors = new Color[] {Color.Aqua, Color.Aquamarine, Color.Black, Color.BlueViolet,
         Color.CornflowerBlue, Color.DarkOrchid, Color.DeepSkyBlue, Color.DodgerBlue, Color.Green, Color.ForestGreen,
-        Color.MidnightBlue, Color.Navy, Color.SlateBlue, Color.MediumSlateBlue, Color.Orchid, Color.DarkGreen,
+        Color.MidnightBlue, Color.Navy, Color.SlateBlue, Color.MediumSlateBlue, Color.Orchid,
         Color.Plum, Color.SpringGreen, Color.Gold, Color.Black, Color.Black, Color.Black, Color.Navy, Color.Navy, 
         Color.MidnightBlue, Color.MidnightBlue, Color.MidnightBlue, Color.ForestGreen, Color.ForestGreen, Color.ForestGreen,
         Color.Gold, Color.Gold, Color.Gold};
@@ -190,6 +190,7 @@ namespace SnakeGame
                 if (snake.Body[0].Intersects(snake.Body[i])) //if it intersects with its tail
                 {
                     dead = true;
+                    ouInstance.Stop();
                     if (record == score)
                     {
                         WriteRecord();
@@ -431,7 +432,7 @@ namespace SnakeGame
                     if (snake.Body[i].Width > 0)
                     {
                         if (i == 0)
-                            spriteBatch.Draw(texture, snake.Body[i], Color.White);
+                            spriteBatch.Draw(texture, snake.Body[i], Color.DarkGreen);
                         else
                             spriteBatch.Draw(texture, snake.Body[i], Color.White);
                     }
